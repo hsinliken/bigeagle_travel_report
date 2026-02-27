@@ -90,7 +90,7 @@ export async function generateTourPlan(
   productName: string,
   extraContent?: string
 ): Promise<TourPlan> {
-  const apiKey = process.env.API_KEY;
+  const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY;
   const ai = new GoogleGenAI({ apiKey: apiKey as string });
   const systemInstruction = type === TourType.DOMESTIC ? DOMESTIC_SYSTEM_PROMPT : INTERNATIONAL_SYSTEM_PROMPT;
   
@@ -138,7 +138,7 @@ export async function generateTourPlan(
  * @param context 包含當天標題、描述、以及旅遊類型的組合文字
  */
 export async function generateImageForDay(context: string): Promise<string> {
-  const apiKey = process.env.API_KEY;
+  const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY;
   const ai = new GoogleGenAI({ apiKey: apiKey as string });
   
   // 強化提示詞：強調真實景點、建築、飯店與餐點的寫實感
@@ -159,12 +159,14 @@ export async function generateImageForDay(context: string): Promise<string> {
       } as any
     });
 
-    for (const part of response.candidates[0].content.parts) {
-      if (part.inlineData) {
-        return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+    if (response.candidates && response.candidates[0] && response.candidates[0].content && response.candidates[0].content.parts) {
+      for (const part of response.candidates[0].content.parts) {
+        if (part.inlineData) {
+          return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
+        }
       }
     }
-    throw new Error("No image data");
+    throw new Error("No image data in response");
   } catch (error) {
     console.warn("AI Image gen failed, using fallback:", error);
     return `https://picsum.photos/seed/${Math.random()}/1200/675`;
@@ -175,7 +177,7 @@ export async function generateQuotation(
   plan: TourPlan,
   costReference?: string
 ): Promise<Quotation> {
-  const apiKey = process.env.API_KEY;
+  const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY;
   const ai = new GoogleGenAI({ apiKey: apiKey as string });
   
   const prompt = `

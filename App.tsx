@@ -543,6 +543,17 @@ const App: React.FC = () => {
 
   const regenerateDayImages = async (idx: number) => {
     if (!generatedPlan) return;
+    
+    // 檢查是否需要選取 API Key (針對 Nano Banana 模型)
+    if (window.aistudio) {
+      const hasKey = await window.aistudio.hasSelectedApiKey();
+      if (!hasKey) {
+        await window.aistudio.openSelectKey();
+        // 提示使用者需要選取金鑰
+        return;
+      }
+    }
+
     const day = generatedPlan.days[idx];
     const count = day.imageCount || 1;
     
@@ -558,7 +569,13 @@ const App: React.FC = () => {
       const imagePromises = [];
       for (let i = 0; i < count; i++) {
         const variations = ["scenic vista", "cultural landmark", "local vibe"];
-        imagePromises.push(generateImageForDay(`${dayContext}, ${variations[i % variations.length]}`));
+        // 加入超時保護，避免單張圖片卡死整體流程
+        const imagePromise = Promise.race([
+          generateImageForDay(`${dayContext}, ${variations[i % variations.length]}`),
+          new Promise<string>((_, reject) => setTimeout(() => reject(new Error("Timeout")), 15000))
+        ]).catch(() => `https://picsum.photos/seed/${Math.random()}/1200/675`);
+        
+        imagePromises.push(imagePromise);
       }
       const base64Images = await Promise.all(imagePromises);
       updateDayField(idx, 'customImages', base64Images);
