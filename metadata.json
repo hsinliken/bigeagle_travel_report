@@ -1,0 +1,7 @@
+{
+  "name": "大鷹旅遊-行程簡表-5",
+  "description": "專為大鷹設計的行程簡表AI小助手，支持國內外旅遊行程自動生成、內容調整及專業PDF排版輸出。",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

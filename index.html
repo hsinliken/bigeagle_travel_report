@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大鷹旅遊-行程簡表</title>
+    <!-- 加入空白 Favicon 避免 404 警告 -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦅</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f8fafc;
+        }
+        @media print {
+            .no-print { display: none !important; }
+            .print-break-inside-avoid { page-break-inside: avoid; }
+            body { background-color: white !important; margin: 0 !important; padding: 0 !important; }
+            #root { width: 100% !important; margin: 0 !important; padding: 0 !important; }
+            /* 確保 A4 簡表列印時佔滿全幅 */
+            #itinerary-summary-container { 
+                width: 210mm !important; 
+                margin: 0 auto !important; 
+                padding: 10mm 5mm !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+            /* 確保完整版列印時也美觀 */
+            #itinerary-preview-container {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 20px 5mm !important;
+                box-shadow: none !important;
+                border: none !important;
+                border-radius: 0 !important;
+            }
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.0.0",
+    "react/": "https://esm.sh/react@19.0.0/",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/": "https://esm.sh/react-dom@19.0.0/",
+    "react/jsx-runtime": "https://esm.sh/react@19.0.0/jsx-runtime",
+    "@google/genai": "https://esm.sh/@google/genai@1.3.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>
